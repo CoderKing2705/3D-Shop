@@ -1,9 +1,10 @@
 "use client";
 
-import React, { Suspense, useMemo, useRef } from "react";
+import React, { Suspense, useRef, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Environment, useGLTF, Html, useProgress } from "@react-three/drei";
-import * as THREE from 'three';
+import * as THREE from "three";
+
 function Loader() {
     const { progress } = useProgress();
     return <Html center>{Math.round(progress)}% loading</Html>;
@@ -11,15 +12,14 @@ function Loader() {
 
 type ViewerProps = {
     modelPath: string;
-    color?: string; // hex color for override
+    color?: string;
 };
 
 function Model({ url, color }: { url: string; color?: string }) {
     const { scene } = useGLTF(url);
     const group = useRef<THREE.Group | null>(null);
 
-    // Apply a color override
-    useMemo(() => {
+    useEffect(() => {
         if (!color) return;
         scene.traverse((child: any) => {
             if (child.isMesh && child.material) {
@@ -29,7 +29,6 @@ function Model({ url, color }: { url: string; color?: string }) {
         });
     }, [scene, color]);
 
-    // Optional idle rotation
     useFrame((state, delta) => {
         if (group.current) group.current.rotation.y += delta * 0.15;
     });

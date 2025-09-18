@@ -6,7 +6,7 @@ export default function HomePage() {
   return (
     <main className="p-6">
       <h1 className="text-4xl font-bold text-center mb-8">3D Store</h1>
-      <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div className="grid sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
         {products.map((product) => (
           <Link
             key={product.id}

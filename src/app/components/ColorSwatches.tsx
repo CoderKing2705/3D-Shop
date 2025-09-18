@@ -1,24 +1,21 @@
 "use client";
 
-import React from "react";
-
-type Props = {
-    onSelect: (color: string) => void;
+interface ColorSwatchesProps {
+    colors: string[];
     selected: string;
-};
+    onSelect: (color: string) => void;
+}
 
-const colors = ["#ffffff", "#7c3aed", "#f59e0b", "#10b981", "#ef4444"];
-
-export default function ColorSwatches({ onSelect, selected }: Props) {
+export default function ColorSwatches({ colors = ["#000"], selected, onSelect }: ColorSwatchesProps) {
     return (
-        <div className="mt-4 flex flex-wrap gap-3">
-            {colors.map((c) => (
+        <div className="flex gap-3">
+            {colors.map((color) => (
                 <button
-                    key={c}
-                    onClick={() => onSelect(c)}
-                    className={`h-8 w-8 rounded-full border-2 transition 
-            ${selected === c ? "border-gray-800" : "border-gray-300"}`}
-                    style={{ backgroundColor: c }}
+                    key={color}
+                    onClick={() => onSelect(color)}
+                    className={`w-8 h-8 rounded-full border-2 transition-transform hover:scale-110 ${selected === color ? "border-gray-900" : "border-gray-300"
+                        }`}
+                    style={{ backgroundColor: color }}
                 />
             ))}
         </div>
