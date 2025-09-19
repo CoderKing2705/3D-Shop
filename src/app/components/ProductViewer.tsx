@@ -10,11 +10,6 @@ function Loader() {
     return <Html center>{Math.round(progress)}% loading</Html>;
 }
 
-type ViewerProps = {
-    modelPath: string;
-    color?: string;
-};
-
 function Model({ url, color }: { url: string; color?: string }) {
     const { scene } = useGLTF(url);
     const group = useRef<THREE.Group | null>(null);
@@ -36,10 +31,14 @@ function Model({ url, color }: { url: string; color?: string }) {
     return <primitive ref={group} object={scene} dispose={null} />;
 }
 
-export default function ProductViewer({ modelPath, color = "#ffffff" }: ViewerProps) {
+export default function ProductViewer({ modelPath, color = "#ffffff" }: { modelPath: string; color?: string }) {
     return (
-        <div className="canvas-wrap rounded-2xl shadow-lg overflow-hidden">
-            <Canvas shadows camera={{ position: [0, 1, 3], fov: 45 }}>
+        <div className="w-full h-[500px] md:h-[600px] bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl shadow-lg overflow-hidden">
+            <Canvas
+                shadows
+                camera={{ position: [0, 1, 3], fov: 45 }}
+                style={{ background: "transparent" }} // ✅ Transparent canvas
+            >
                 <ambientLight intensity={0.6} />
                 <spotLight
                     intensity={1}
