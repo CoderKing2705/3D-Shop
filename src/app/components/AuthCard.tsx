@@ -19,7 +19,7 @@ export default function AuthCard({
     footerLinkHref,
 }: AuthCardProps) {
     return (
-        <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#1c1c1e] via-[#2f2f33] to-[#0abfbc] bg-[length:800%_800%] animate-gradientAnimation">
+        <div className="flex min-h-screen items-center justify-center animate-gradientAnimation">
             <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-2xl p-8 w-full max-w-md">
                 <h1 className="text-3xl font-bold text-gray-900 text-center mb-6">
                     {title}
