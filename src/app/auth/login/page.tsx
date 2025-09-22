@@ -4,6 +4,7 @@ import { signIn } from "next-auth/react";
 import { useState } from "react";
 import AuthCard from "@/app/components/AuthCard";
 import Image from "next/image";
+import toast from "react-hot-toast";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
@@ -19,9 +20,12 @@ export default function LoginPage() {
         });
 
         if (res?.error) {
-            alert("Invalid credentials");
+            toast.error("Invalid credentials. Please try again!");
         } else {
-            window.location.href = "/";
+            toast.success("Logged in successfully!");
+            setTimeout(() => {
+                window.location.href = "/";
+            }, 1000);
         }
     };
 
@@ -52,15 +56,15 @@ export default function LoginPage() {
                         <form onSubmit={handleSubmit} className="space-y-6">
                             {/* Email */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-base font-medium text-gray-900 dark:text-white mb-1">
                                     Email
                                 </label>
                                 <input
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full rounded-xl border border-gray-300 bg-gray-50 text-gray-900 
-                 focus:border-purple-500 focus:ring-purple-500 p-3 placeholder-gray-400 shadow-sm"
+                                    className="w-full rounded-xl border border-gray-300 bg-white/90 dark:bg-gray-800 text-gray-900 dark:text-white 
+               focus:border-purple-500 focus:ring-purple-500 p-4 text-lg placeholder-gray-400 shadow-sm"
                                     placeholder="Enter your email"
                                     required
                                 />
@@ -68,15 +72,15 @@ export default function LoginPage() {
 
                             {/* Password */}
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                <label className="block text-base font-medium text-gray-900 dark:text-white mb-1">
                                     Password
                                 </label>
                                 <input
                                     type="password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full rounded-xl border border-gray-300 bg-gray-50 text-gray-900 
-                 focus:border-purple-500 focus:ring-purple-500 p-3 placeholder-gray-400 shadow-sm"
+                                    className="w-full rounded-xl border border-gray-300 bg-white/90 dark:bg-gray-800 text-gray-900 dark:text-white 
+               focus:border-purple-500 focus:ring-purple-500 p-4 text-lg placeholder-gray-400 shadow-sm"
                                     placeholder="Enter your password"
                                     required
                                 />
@@ -85,8 +89,9 @@ export default function LoginPage() {
                             {/* Sign In Button */}
                             <button
                                 type="submit"
-                                className="w-full py-3 bg-purple-600 text-white text-lg font-semibold rounded-xl 
-               hover:bg-purple-700 transition-all shadow-md hover:shadow-xl"
+                                className="w-full py-4 bg-purple-600 text-white text-xl font-semibold rounded-xl 
+             hover:bg-purple-700 active:scale-95 active:bg-purple-800 transition-all 
+             shadow-md hover:shadow-xl"
                             >
                                 Sign In
                             </button>

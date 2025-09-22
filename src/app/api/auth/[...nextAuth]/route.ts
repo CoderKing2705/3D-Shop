@@ -20,12 +20,16 @@ export const authOptions: NextAuthOptions = {
                     throw new Error("Missing credentials");
                 }
 
-                const user = await prisma.user.findUnique({
+                const user = await prisma.users.findUnique({
                     where: { email: credentials.email },
                 });
 
                 if (!user) {
                     throw new Error("No user found");
+                }
+                
+                if (!user.password) {
+                    throw new Error("User has no password set");
                 }
 
                 const isValid = await compare(credentials.password, user.password);

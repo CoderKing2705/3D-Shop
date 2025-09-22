@@ -41,8 +41,9 @@ body::before {
   content: "";
   position: fixed;
   inset: 0;
-  background: url('/images/noise.png');
+  /* background: url('/images/noise.png'); */
   /* subtle transparent noise */
   opacity: 0.03;
   pointer-events: none;
 }
+
