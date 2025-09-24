@@ -27,7 +27,7 @@ export const authOptions: NextAuthOptions = {
                 if (!user) {
                     throw new Error("No user found");
                 }
-                
+
                 if (!user.password) {
                     throw new Error("User has no password set");
                 }
@@ -37,7 +37,12 @@ export const authOptions: NextAuthOptions = {
                     throw new Error("Invalid password");
                 }
 
-                return { id: user.id, name: user.name, email: user.email };
+                return {
+                    id: user.id,
+                    name: user.name,
+                    email: user.email,
+                    role: user.role,
+                };
             },
         }),
     ],
@@ -46,6 +51,22 @@ export const authOptions: NextAuthOptions = {
     },
     session: {
         strategy: "jwt",
+    },
+    callbacks: {
+        async jwt({ token, user }) {
+            // first time user logs in
+            if (user) {
+                token.role = (user as any).role; // store role in token
+            }
+            return token;
+        },
+        async session({ session, token }) {
+            if (session.user) {
+                // @ts-ignore
+                session.user.role = token.role; // attach role to session
+            }
+            return session;
+        },
     },
     secret: process.env.NEXTAUTH_SECRET,
 };

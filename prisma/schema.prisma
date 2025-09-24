@@ -18,6 +18,7 @@ model Users {
   id            String   @id @default(cuid())
   name          String?
   email         String   @unique
+  role          String @default("USER")
   password      String?  // only for credentials auth
   image         String?
   emailVerified DateTime?
@@ -66,13 +67,16 @@ model VerificationToken {
 
 model Product {
   id          Int             @id @default(autoincrement())
+  slug        String?         @unique
   name        String
   description String
   price       Float
+  modelPath   String
+  thumbnail   String
+  colors      Json?
   createdAt   DateTime        @default(now())
-  images      ProductImage[]  
-  categories  Category[]      
-  colors      Json?           // optional JSON array of color codes
+  images      ProductImage[]
+  categories  Category[]   // optional JSON array of color codes
 }
 
 model ProductImage {
