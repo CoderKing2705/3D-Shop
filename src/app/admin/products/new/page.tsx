@@ -20,12 +20,26 @@ export default function NewProductForm() {
         if (glbFile) formData.append("glbFile", glbFile);
         if (imageFile) formData.append("imageFile", imageFile);
 
-        await fetch("/api/admin/products", {
-            method: "POST",
-            body: formData,
-        });
+        try {
+            const res = await fetch("/api/admin/products", {
+                method: "POST",
+                body: formData,
+            });
 
-        window.location.href = "/admin/products";
+            if (!res.ok) {
+                const error = await res.json();
+                console.error("❌ Error adding product:", error);
+                return;
+            }
+
+            const data = await res.json();
+            console.log("✅ Product added:", data);
+
+            // redirect after success
+            window.location.href = "/admin/products";
+        } catch (err) {
+            console.error("❌ Network error:", err);
+        }
     }
 
     return (
@@ -34,7 +48,7 @@ export default function NewProductForm() {
             <form
                 onSubmit={handleSubmit}
                 className="bg-white/80 backdrop-blur-md shadow-xl rounded-2xl p-8 w-full max-w-md space-y-6 transform transition-transform hover:scale-105 duration-300"
-                style={{marginBottom:"5%"}}
+                style={{ marginBottom: "5%" }}
             >
                 <h1 className="text-3xl font-extrabold text-gray-900 text-center">
                     Add Product

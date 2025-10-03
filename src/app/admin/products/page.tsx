@@ -3,6 +3,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/app/lib/prisma";
+import Image from "next/image";
 
 export default async function AdminProductsPage() {
     const session = await getServerSession(authOptions);
@@ -11,20 +12,27 @@ export default async function AdminProductsPage() {
     }
 
     const products = await prisma.product.findMany({ orderBy: { createdAt: "desc" } });
-
     return (
-        <main className="min-h-screen p-8 bg-[url('/neon-grid-bg.jpg')] bg-cover bg-center text-white">
+        <main className="min-h-screen p-8 bg-cover bg-center text-white">
             {/* Header */}
             <div className="flex justify-between items-center mb-10">
                 <h1 className="text-4xl font-extrabold tracking-wide text-purple-400 drop-shadow-lg">
                     Admin – Products
                 </h1>
-                <Link
-                    href="/admin/products/new"
-                    className="px-6 py-3 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 text-white font-bold rounded-xl shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-300"
-                >
-                    + Add New Product
-                </Link>
+                <div className="flex gap-4">
+                    <Link
+                        href="/admin/analytics"
+                        className="px-6 py-3 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 text-white font-bold rounded-xl shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-300"
+                    >
+                        📊 Analytics
+                    </Link>
+                    <Link
+                        href="/admin/products/new"
+                        className="px-6 py-3 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 text-white font-bold rounded-xl shadow-lg hover:scale-105 hover:shadow-2xl transition-all duration-300"
+                    >
+                        + Add New Product
+                    </Link>
+                </div>
             </div>
 
             {/* Products Grid */}
@@ -36,7 +44,19 @@ export default async function AdminProductsPage() {
                     >
                         <h2 className="text-2xl font-semibold text-purple-300 mb-2">{p.name}</h2>
                         <p className="text-gray-300 mb-2">Slug: {p.slug}</p>
-                        <p className="text-white font-bold text-lg mb-4">${p.price}</p>
+                        <div className="flex items-center justify-between mb-4">
+                            <p className="text-white font-bold text-lg">${p.price}</p>
+                            {p.thumbnail && (
+                                <div className="w-16 h-16 relative rounded-lg overflow-hidden border border-purple-500">
+                                    <Image
+                                        src={p.thumbnail}
+                                        alt={p.name}
+                                        fill
+                                        className="object-cover"
+                                    />
+                                </div>
+                            )}
+                        </div>
 
                         <div className="flex justify-between items-center">
                             <Link
