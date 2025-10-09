@@ -40,14 +40,40 @@ export default function AnalyticsClient({ categoryDistribution }: { categoryDist
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-white/10 p-6 rounded-2xl shadow">
-                <h3 className="text-lg font-semibold text-purple-300 mb-4">Products by Category (Pie)</h3>
-                <Chart options={pieOptions} series={values} type="pie" height={320} />
+            {/* Pie Card */}
+            <div className="bg-white/6 backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-lg">
+                <h3 className="text-lg font-semibold text-white mb-4">Products by Category — Pie</h3>
+                <div className="w-full h-[340px]">
+                    <Chart options={pieOptions} series={values} type="pie" height={320} />
+                </div>
             </div>
 
-            <div className="col-span-1 md:col-span-2 bg-white/10 p-6 rounded-2xl shadow">
-                <h3 className="text-lg font-semibold text-purple-300 mb-4">Products by Category (Bar)</h3>
-                <Chart options={barOptions} series={[{ name: "Count", data: values }]} type="bar" height={380} />
+            {/* Bar Card (tall) */}
+            <div className="col-span-1 md:col-span-2 bg-white/6 backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-lg">
+                <h3 className="text-lg font-semibold text-white mb-4">Products by Category — Bar</h3>
+                <div className="w-full h-[420px]">
+                    <Chart options={barOptions} series={[{ name: "Count", data: values }]} type="bar" height={380} />
+                </div>
+
+                {/* Optional: small table summary */}
+                <div className="mt-4 overflow-auto">
+                    <table className="w-full text-sm text-white/90">
+                        <thead>
+                            <tr className="text-left text-xs text-white/70 uppercase">
+                                <th className="pb-2">Category</th>
+                                <th className="pb-2">Count</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {categoryDistribution.map((c) => (
+                                <tr key={c.name} className="border-t border-white/5">
+                                    <td className="py-2">{c.name}</td>
+                                    <td className="py-2 font-medium">{c.value}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     );

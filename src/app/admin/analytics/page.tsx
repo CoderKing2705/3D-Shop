@@ -30,22 +30,30 @@ export default async function AdminAnalyticsPage() {
     // If you want a fallback / include an "Uncategorized" bucket, you can compute it here
 
     return (
-        <main className="min-h-screen p-8 bg-[url('/neon-grid-bg.jpg')] bg-cover bg-center text-white">
-            <div className="flex items-center justify-between mb-6">
-                <h1 className="text-4xl font-extrabold text-purple-400">Admin Analytics</h1>
-                <Link
-                    href="/admin/products"
-                    className="px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg shadow hover:scale-105 transition"
-                >
-                    ← Back to Products
-                </Link>
-            </div>
+        <main className="min-h-screen p-8 relative">
+            <div className="max-w-7xl mx-auto">
+                {/* Header + Back button */}
+                <div className="flex items-center justify-between mb-6">
+                    <h1 className="text-4xl font-extrabold text-white drop-shadow-lg">
+                        📊 Analytics
+                    </h1>
 
-            {categoryDistribution.length === 0 ? (
-                <div className="bg-white/10 p-6 rounded-2xl">No categories or products found.</div>
-            ) : (
-                <AnalyticsClient categoryDistribution={categoryDistribution} />
-            )}
+                    <div className="flex gap-3">
+                        <Link
+                            href="/admin/products"
+                            className="px-4 py-2 bg-white/10 backdrop-blur-md text-white rounded-lg shadow hover:scale-105 transition"
+                        >
+                            ← Back to Products
+                        </Link>
+                    </div>
+                </div>
+
+                {categoryDistribution.length === 0 ? (
+                    <div className="bg-white/10 p-6 rounded-2xl">No categories or products found.</div>
+                ) : (
+                    <AnalyticsClient categoryDistribution={categoryDistribution} />
+                )}
+            </div>
         </main>
     );
 }

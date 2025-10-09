@@ -14,6 +14,7 @@ function Model({ url, color }: { url: string; color?: string }) {
     const { scene } = useGLTF(url);
     const group = useRef<THREE.Group | null>(null);
 
+    // Apply color override safely
     useEffect(() => {
         if (!color) return;
         scene.traverse((child: any) => {
@@ -24,6 +25,7 @@ function Model({ url, color }: { url: string; color?: string }) {
         });
     }, [scene, color]);
 
+    // Optional idle rotation
     useFrame((state, delta) => {
         if (group.current) group.current.rotation.y += delta * 0.15;
     });
