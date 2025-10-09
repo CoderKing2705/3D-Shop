@@ -1,6 +1,6 @@
 
 import { notFound } from "next/navigation";
-import { prisma } from "@/app/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import ProductClient from "./ProductClient";
 
 export default async function ProductPage({

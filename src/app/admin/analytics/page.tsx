@@ -3,7 +3,7 @@ import AnalyticsClient from "./AnalyticsClient";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
-import { prisma } from "@/app/lib/prisma"; // adjust if you export default: `import prisma from "@/app/lib/prisma";`
+import { prisma } from "@/lib/prisma"; // adjust if you export default: `import prisma from "@/app/lib/prisma";`
 import Link from "next/link";
 
 export default async function AdminAnalyticsPage() {

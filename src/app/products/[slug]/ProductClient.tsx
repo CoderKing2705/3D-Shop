@@ -1,7 +1,7 @@
 "use client";
 
-import ColorSwatches from "@/app/components/ColorSwatches";
-import ProductViewer from "@/app/components/ProductViewer";
+import ColorSwatches from "@/components/ColorSwatches";
+import ProductViewer from "@/components/ProductViewer";
 import { useState } from "react";
 
 export default function ProductClient({ product }: { product: any }) {

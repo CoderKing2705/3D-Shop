@@ -1,6 +1,6 @@
 // scripts/merge-categories.ts
 
-import { prisma } from "@/app/lib/prisma";
+import { prisma } from "@/lib/prisma";
 
 async function main() {
     const cats = await prisma.category.findMany();

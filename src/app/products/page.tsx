@@ -1,11 +1,11 @@
 // app/products/page.tsx
 import Link from "next/link";
 import Image from "next/image";
-import Navbar from "../components/Navbar";
+import Navbar from "../../components/Navbar";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
-import { prisma } from "../lib/prisma";
+import { prisma } from "../../lib/prisma";
 
 export default async function ProductsPage() {
     const session = await getServerSession(authOptions);

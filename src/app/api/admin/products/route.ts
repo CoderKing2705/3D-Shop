@@ -1,6 +1,6 @@
 // src/app/api/admin/products/route.ts
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/app/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import { writeFile, writeFileSync } from "fs";
 import path from "path";
 import fs from "fs";

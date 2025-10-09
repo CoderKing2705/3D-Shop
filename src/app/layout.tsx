@@ -1,7 +1,7 @@
 import { SessionProvider } from "next-auth/react";
-import "./globals.css";
+import '../styles/globals.css';
 import type { Metadata } from "next";
-import Providers from "./components/Providers";
+import Providers from "../components/Providers";
 import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {

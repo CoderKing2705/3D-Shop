@@ -1,6 +1,6 @@
 "use client";
 
-import AuthCard from "@/app/components/AuthCard";
+import AuthCard from "@/components/AuthCard";
 import { useState } from "react";
 import toast from "react-hot-toast";
 

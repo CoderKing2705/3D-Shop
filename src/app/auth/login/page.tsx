@@ -2,7 +2,7 @@
 
 import { signIn } from "next-auth/react";
 import { useState } from "react";
-import AuthCard from "@/app/components/AuthCard";
+import AuthCard from "@/components/AuthCard";
 import Image from "next/image";
 import toast from "react-hot-toast";
 

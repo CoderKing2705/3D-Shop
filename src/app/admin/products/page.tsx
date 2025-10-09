@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { prisma } from "@/app/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import Image from "next/image";
 
 export default async function AdminProductsPage() {
