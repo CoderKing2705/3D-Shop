@@ -8,6 +8,7 @@ export default function NewProductForm() {
     const [description, setDescription] = useState("");
     const [glbFile, setGlbFile] = useState<File | null>(null);
     const [imageFile, setImageFile] = useState<File | null>(null);
+    const [categories, setCategories] = useState("");
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
@@ -17,6 +18,7 @@ export default function NewProductForm() {
         formData.append("slug", slug);
         formData.append("price", price);
         formData.append("description", description);
+        formData.append("categories", categories);
         if (glbFile) formData.append("glbFile", glbFile);
         if (imageFile) formData.append("imageFile", imageFile);
 
@@ -81,6 +83,19 @@ export default function NewProductForm() {
                     />
                     <label className="absolute left-0 -top-3 text-gray-500 text-sm transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base peer-focus:-top-3 peer-focus:text-sm peer-focus:text-purple-500">
                         Slug
+                    </label>
+                </div>
+
+                <div className="relative">
+                    <input
+                        type="text"
+                        placeholder="Categories (comma separated)"
+                        className="peer w-full border-b-2 border-gray-300 focus:border-purple-500 outline-none py-2 text-gray-900 placeholder-transparent transition-all"
+                        value={categories}
+                        onChange={(e) => setCategories(e.target.value)}
+                    />
+                    <label className="absolute left-0 -top-3 text-gray-500 text-sm transition-all">
+                        Categories
                     </label>
                 </div>
 

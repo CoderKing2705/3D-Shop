@@ -12,15 +12,16 @@
     "@react-three/drei": "^10.7.6",
     "@react-three/fiber": "^9.3.0",
     "@react-three/postprocessing": "^3.0.4",
+    "apexcharts": "^5.3.5",
     "bcryptjs": "^3.0.2",
     "framer-motion": "^12.23.14",
     "lucide-react": "^0.544.0",
     "next": "15.5.3",
     "next-auth": "^4.24.11",
     "react": "19.1.0",
+    "react-apexcharts": "^1.7.0",
     "react-dom": "19.1.0",
     "react-hot-toast": "^2.6.0",
-    "recharts": "^3.2.1",
     "three": "^0.180.0",
     "zustand": "^5.0.8"
   },
@@ -35,6 +36,7 @@
     "eslint-config-next": "15.5.3",
     "prisma": "^6.16.2",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
   }
 }

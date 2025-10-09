@@ -88,7 +88,7 @@ model ProductImage {
 
 model Category {
   id       Int       @id @default(autoincrement())
-  name     String
-  products Product[] // many-to-many implicit relation
+  name     String    @unique
+  products Product[] 
 }
 
