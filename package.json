@@ -13,6 +13,7 @@
     "@react-three/fiber": "^9.3.0",
     "@react-three/postprocessing": "^3.0.4",
     "apexcharts": "^5.3.5",
+    "axios": "^1.12.2",
     "bcryptjs": "^3.0.2",
     "framer-motion": "^12.23.14",
     "lucide-react": "^0.544.0",
