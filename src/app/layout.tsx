@@ -5,7 +5,7 @@ import Providers from "../components/Providers";
 import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
-  title: "3D E-Commerce Viewer",
+  title: "3D E-Commerce",
   description: "Interactive 3D product viewer built with Next.js and React Three Fiber",
 };
 
