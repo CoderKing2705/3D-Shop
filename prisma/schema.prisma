@@ -15,33 +15,34 @@ datasource db {
 
 // User model for authentication
 model Users {
-  id            String   @id @default(cuid())
+  id            String     @id @default(cuid())
   name          String?
-  email         String   @unique
-  role          String @default("USER")
-  password      String?  // only for credentials auth
+  email         String     @unique
+  role          String     @default("USER")
+  password      String? // only for credentials auth
   image         String?
   emailVerified DateTime?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
   accounts      Account[]
   sessions      Session[]
+  cartItems     CartItem[]
 }
 
 // NextAuth account + session tables
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?
-  access_token       String?
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?
-  session_state      String?
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
 
   user Users @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -66,29 +67,42 @@ model VerificationToken {
 }
 
 model Product {
-  id          Int             @id @default(autoincrement())
-  slug        String?         @unique
+  id          Int            @id @default(autoincrement())
+  slug        String?        @unique
   name        String
   description String
   price       Float
   modelPath   String
   thumbnail   String
   colors      Json?
-  createdAt   DateTime        @default(now())
+  createdAt   DateTime       @default(now())
   images      ProductImage[]
-  categories  Category[]   // optional JSON array of color codes
+  categories  Category[] // optional JSON array of color codes
+  cartItems   CartItem[]
 }
 
 model ProductImage {
-  id        Int      @id @default(autoincrement())
+  id        Int     @id @default(autoincrement())
   url       String
-  product   Product  @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
   productId Int
 }
 
 model Category {
   id       Int       @id @default(autoincrement())
   name     String    @unique
-  products Product[] 
+  products Product[]
 }
 
+model CartItem {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  productId Int
+  color     String
+  quantity  Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user    Users    @relation(fields: [userId], references: [id])
+  product Product  @relation(fields: [productId], references: [id])
+}

@@ -1,14 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
-import { Menu, X } from "lucide-react"; // hamburger icons
+import { Menu, ShoppingCart, X } from "lucide-react"; // hamburger icons
 
 export default function Navbar() {
   const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(false);
-
+  const [cartCount, setCartCount] = useState(0);
+  useEffect(() => {
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    setCartCount(cart.length);
+  }, []);
   return (
     <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md shadow-md">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -31,6 +35,19 @@ export default function Navbar() {
           <Link href="/contact" className="text-gray-700 hover:text-purple-700 transition">
             Contact
           </Link>
+        </div>
+
+        <div className="hidden md:flex items-center gap-4 relative">
+          {/* Cart Icon */}
+          <Link href="/cart" className="relative text-gray-700 hover:text-purple-700 transition">
+            <ShoppingCart size={24} />
+            {cartCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                {cartCount}
+              </span>
+            )}
+          </Link>
+          {/* Auth buttons remain */}
         </div>
 
         {/* Auth Buttons */}
