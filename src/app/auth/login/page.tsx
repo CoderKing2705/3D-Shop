@@ -5,9 +5,9 @@ import { useState } from "react";
 import AuthCard from "@/components/AuthCard";
 import Image from "next/image";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
 
 export default function LoginPage() {
-    
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
@@ -17,7 +17,7 @@ export default function LoginPage() {
             redirect: false,
             email,
             password,
-            callbackUrl: "/", // where to go after login
+            callbackUrl: "/",
         });
 
         if (res?.error) {
@@ -30,10 +30,26 @@ export default function LoginPage() {
         }
     };
 
+    // Framer Motion variants
+    const imageVariant = {
+        hidden: { opacity: 0, x: -50 },
+        visible: { opacity: 1, x: 0, transition: { duration: 0.8 } },
+    };
+
+    const formVariant = {
+        hidden: { opacity: 0, y: 50 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 0.3 } },
+    };
+
     return (
         <div className="min-h-screen grid grid-cols-1 md:grid-cols-12">
             {/* Left Side Image */}
-            <div className="hidden md:col-span-8 md:flex items-center justify-center bg-purple-100 relative">
+            <motion.div
+                className="hidden md:col-span-8 md:flex items-center justify-center relative"
+                variants={imageVariant}
+                initial="hidden"
+                animate="visible"
+            >
                 <Image
                     src="/login_background.png"
                     alt="3D Store Background"
@@ -41,12 +57,16 @@ export default function LoginPage() {
                     className="object-cover"
                     priority
                 />
-                <div className="absolute inset-0 bg-black/40" /> {/* Optional overlay for readability */}
-            </div>
-
+                <div className="absolute inset-0 bg-black/40" />
+            </motion.div>
 
             {/* Right Side Login Form */}
-            <div className="col-span-12 md:col-span-4 flex items-center justify-center p-6">
+            <motion.div
+                className="col-span-12 md:col-span-4 flex items-center justify-center p-6 bg-gray-50 dark:bg-gray-900"
+                variants={formVariant}
+                initial="hidden"
+                animate="visible"
+            >
                 <div className="w-full max-w-md">
                     <AuthCard
                         title="Welcome Back"
@@ -57,42 +77,41 @@ export default function LoginPage() {
                         <form onSubmit={handleSubmit} className="space-y-6">
                             {/* Email */}
                             <div>
-                                <label className="block text-base font-medium text-gray-900 dark:text-white mb-1">
+                                <label className="block text-base font-medium text-gray-900 dark:text-white mb-2">
                                     Email
                                 </label>
                                 <input
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full rounded-xl border border-gray-300 bg-white/90 dark:bg-gray-800 text-gray-900 dark:text-white 
-               focus:border-purple-500 focus:ring-purple-500 p-4 text-lg placeholder-gray-400 shadow-sm"
                                     placeholder="Enter your email"
                                     required
+                                    className="w-full rounded-2xl border border-gray-300 bg-white/90 dark:bg-gray-800 text-gray-900 dark:text-white 
+                  focus:border-purple-500 focus:ring-2 focus:ring-purple-500 p-4 text-lg placeholder-gray-400 shadow-sm transition"
                                 />
                             </div>
 
                             {/* Password */}
                             <div>
-                                <label className="block text-base font-medium text-gray-900 dark:text-white mb-1">
+                                <label className="block text-base font-medium text-gray-900 dark:text-white mb-2">
                                     Password
                                 </label>
                                 <input
                                     type="password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full rounded-xl border border-gray-300 bg-white/90 dark:bg-gray-800 text-gray-900 dark:text-white 
-               focus:border-purple-500 focus:ring-purple-500 p-4 text-lg placeholder-gray-400 shadow-sm"
                                     placeholder="Enter your password"
                                     required
+                                    className="w-full rounded-2xl border border-gray-300 bg-white/90 dark:bg-gray-800 text-gray-900 dark:text-white 
+                  focus:border-purple-500 focus:ring-2 focus:ring-purple-500 p-4 text-lg placeholder-gray-400 shadow-sm transition"
                                 />
                             </div>
 
                             {/* Sign In Button */}
                             <button
                                 type="submit"
-                                className="w-full py-4 bg-purple-600 text-white text-xl font-semibold rounded-xl 
-             hover:bg-purple-700 active:scale-95 active:bg-purple-800 transition-all 
-             shadow-md hover:shadow-xl"
+                                className="w-full py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xl font-semibold rounded-2xl 
+                hover:from-purple-600 hover:to-pink-600 active:scale-95 transition-all shadow-lg hover:shadow-xl"
                             >
                                 Sign In
                             </button>
@@ -106,19 +125,24 @@ export default function LoginPage() {
 
                             {/* Google Login */}
                             <button
-                                onClick={() => signIn("google")}
+                                onClick={() => signIn("google", { callbackUrl: "/" })}
                                 type="button"
-                                className="w-full py-3 flex items-center justify-center gap-2 border border-gray-300 rounded-xl 
-               bg-white hover:bg-gray-50 text-gray-700 font-medium shadow-sm"
+                                className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-white text-gray-800 font-semibold rounded-2xl
+                           shadow-md hover:shadow-lg transition-shadow duration-300
+                           border border-gray-200 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500
+                           active:scale-95"
                             >
-                                {/* <img src="/google-icon.svg" alt="Google" className="w-5 h-5" /> */}
+                                <img
+                                    src="/google_logo.svg"
+                                    alt="Google Logo"
+                                    className="w-5 h-5"
+                                />
                                 Continue with Google
                             </button>
                         </form>
-
                     </AuthCard>
                 </div>
-            </div>
+            </motion.div>
         </div>
     );
 }
