@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import Image from "next/image";
+import AdminProductActions from "@/components/AdminProductActions";
 
 export default async function AdminProductsPage() {
     const session = await getServerSession(authOptions);
@@ -58,20 +59,7 @@ export default async function AdminProductsPage() {
                             )}
                         </div>
 
-                        <div className="flex justify-between items-center">
-                            <Link
-                                href={`/admin/products/edit/${p.id}`}
-                                className="px-4 py-2 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 text-black rounded-lg font-medium shadow hover:scale-105 transition-transform"
-                            >
-                                Edit
-                            </Link>
-                            <Link
-                                href={`/admin/products/delete/${p.id}`}
-                                className="px-4 py-2 bg-gradient-to-r from-red-500 via-red-600 to-red-700 text-white rounded-lg font-medium shadow hover:scale-105 transition-transform"
-                            >
-                                Delete
-                            </Link>
-                        </div>
+                        <AdminProductActions id={p.id} />
                     </div>
                 ))}
             </div>

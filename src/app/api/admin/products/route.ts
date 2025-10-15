@@ -2,21 +2,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { writeFile, writeFileSync } from "fs";
-import path from "path";
-import fs from "fs";
+import { saveFile } from "@/lib/utils/file";
 
 // ✅ GET all products
 export async function GET() {
     const products = await prisma.product.findMany();
     return NextResponse.json(products);
-}
-
-// small helper to create safe, unique filenames
-function makeUniqueFilename(originalName: string) {
-    const timestamp = Date.now();
-    // sanitize original name (remove spaces / weird chars)
-    const safe = originalName.replace(/\s+/g, "-").replace(/[^a-zA-Z0-9\-\._]/g, "");
-    return `${timestamp}-${safe}`;
 }
 
 // small helper to slugify (if user doesn't provide slug)
@@ -84,27 +75,8 @@ export async function POST(req: NextRequest) {
         let modelPath = "";
         let thumbnail = "";
 
-        // Save GLB into public/models with unique filename
-        if (glbFile) {
-            const glbBytes = Buffer.from(await glbFile.arrayBuffer());
-            const glbDir = path.join(process.cwd(), "public", "models");
-            if (!fs.existsSync(glbDir)) fs.mkdirSync(glbDir, { recursive: true });
-            const glbName = makeUniqueFilename(glbFile.name);
-            const glbDestination = path.join(glbDir, glbName);
-            fs.writeFileSync(glbDestination, glbBytes);
-            modelPath = `/models/${glbName}`;
-        }
-
-        // Save image into public/uploads with unique filename
-        if (imageFile) {
-            const imageBytes = Buffer.from(await imageFile.arrayBuffer());
-            const imageDir = path.join(process.cwd(), "public", "uploads");
-            if (!fs.existsSync(imageDir)) fs.mkdirSync(imageDir, { recursive: true });
-            const imgName = makeUniqueFilename(imageFile.name);
-            const imgDestination = path.join(imageDir, imgName);
-            fs.writeFileSync(imgDestination, imageBytes);
-            thumbnail = `/uploads/${imgName}`;
-        }
+        if (glbFile) modelPath = await saveFile(glbFile, "models");
+        if (imageFile) thumbnail = await saveFile(imageFile, "uploads");
 
         // if no slug provided, auto-generate from name
         if (!slug) slug = slugify(name);

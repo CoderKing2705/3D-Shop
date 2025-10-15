@@ -29,6 +29,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 fontWeight: 500,
                 boxShadow: "0 4px 14px rgba(0,0,0,0.2)",
               },
+              success: {
+                iconTheme: {
+                  primary: "#4ade80", // green
+                  secondary: "#1e1e2f",
+                },
+              },
+              error: {
+                iconTheme: {
+                  primary: "#f87171", // red
+                  secondary: "#1e1e2f",
+                },
+              },
             }}
           />
         </Providers>
