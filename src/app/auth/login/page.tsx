@@ -6,6 +6,7 @@ import AuthCard from "@/components/AuthCard";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
+import Loader from "@/components/loader";
 
 export default function AuthPage() {
     const [isLogin, setIsLogin] = useState(true); // toggle between login/signup
@@ -16,12 +17,15 @@ export default function AuthPage() {
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
+        setLoading(true);
         const res = await signIn("credentials", {
             redirect: false,
             email,
             password,
             callbackUrl: "/",
         });
+
+        setLoading(false);
 
         if (res?.error) {
             toast.error("Invalid credentials. Please try again!");
@@ -36,7 +40,6 @@ export default function AuthPage() {
     const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-
         try {
             const res = await fetch("/api/auth/signup", {
                 method: "POST",
@@ -137,10 +140,20 @@ export default function AuthPage() {
                                 {/* Sign In Button */}
                                 <button
                                     type="submit"
-                                    className="w-full py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xl font-semibold rounded-2xl 
-                hover:from-purple-600 hover:to-pink-600 active:scale-95 transition-all shadow-lg hover:shadow-xl"
+                                    disabled={loading}
+                                    className={`w-full py-4 text-xl font-semibold rounded-2xl transition-all shadow-lg hover:shadow-xl 
+                                                ${loading ? "bg-purple-400 cursor-not-allowed" :
+                                            "bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 active:scale-95"}`}
+
                                 >
-                                    Sign In
+                                    {loading ? (
+                                        <div className="flex items-center justify-center gap-3">
+                                            <Loader size={1.5} color="white" />
+                                            Signing in...
+                                        </div>
+                                    ) : (
+                                        "Sign In"
+                                    )}
                                 </button>
 
                                 {/* Google Login */}
@@ -168,7 +181,8 @@ export default function AuthPage() {
                                         type="text"
                                         value={name}
                                         onChange={(e) => setName(e.target.value)}
-                                        className="mt-1 w-full rounded-xl border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 p-4 text-lg bg-white/90 dark:bg-gray-800 dark:text-white"
+                                        className="w-full rounded-2xl border border-gray-300 bg-white/90 dark:bg-gray-800 text-gray-900 dark:text-white 
+                  focus:border-purple-500 focus:ring-2 focus:ring-purple-500 p-4 text-lg placeholder-gray-400 shadow-sm transition"
                                         placeholder="John Doe"
                                         required
                                     />
@@ -182,7 +196,8 @@ export default function AuthPage() {
                                         type="email"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
-                                        className="mt-1 w-full rounded-xl border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 p-4 text-lg bg-white/90 dark:bg-gray-800 dark:text-white"
+                                        className="w-full rounded-2xl border border-gray-300 bg-white/90 dark:bg-gray-800 text-gray-900 dark:text-white 
+                  focus:border-purple-500 focus:ring-2 focus:ring-purple-500 p-4 text-lg placeholder-gray-400 shadow-sm transition"
                                         placeholder="you@example.com"
                                         required
                                     />
@@ -196,7 +211,8 @@ export default function AuthPage() {
                                         type="password"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        className="mt-1 w-full rounded-xl border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 p-4 text-lg bg-white/90 dark:bg-gray-800 dark:text-white"
+                                        className="w-full rounded-2xl border border-gray-300 bg-white/90 dark:bg-gray-800 text-gray-900 dark:text-white 
+                  focus:border-purple-500 focus:ring-2 focus:ring-purple-500 p-4 text-lg placeholder-gray-400 shadow-sm transition"
                                         placeholder="********"
                                         required
                                     />
@@ -206,9 +222,16 @@ export default function AuthPage() {
                                     type="submit"
                                     disabled={loading}
                                     className={`w-full py-4 text-xl font-semibold rounded-xl transition-all shadow-lg hover:shadow-xl 
-                  ${loading ? "bg-purple-400 cursor-not-allowed" : "bg-purple-600 hover:bg-purple-700 text-white active:scale-95 active:bg-purple-800"}`}
+    ${loading ? "bg-purple-400 cursor-not-allowed" : "bg-purple-600 hover:bg-purple-700 text-white active:scale-95 active:bg-purple-800"}`}
                                 >
-                                    {loading ? "Signing up..." : "Sign Up"}
+                                    {loading ? (
+                                        <div className="flex items-center justify-center gap-2">
+                                            <Loader size={1.5} color="white" />
+                                            Signing up...
+                                        </div>
+                                    ) : (
+                                        "Sign Up"
+                                    )}
                                 </button>
 
                                 {/* Google Login */}
@@ -216,7 +239,10 @@ export default function AuthPage() {
                                     <button
                                         onClick={() => signIn("google", { callbackUrl: "/" })}
                                         type="button"
-                                        className="w-full py-3 border rounded-xl hover:bg-gray-50 transition dark:hover:bg-gray-700 dark:border-gray-600 dark:text-white flex items-center justify-center gap-2"
+                                        className="w-full flex items-center justify-center gap-3 px-6 py-3 bg-white text-gray-800 font-semibold rounded-2xl
+                           shadow-md hover:shadow-lg transition-shadow duration-300
+                           border border-gray-200 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500
+                           active:scale-95"
                                     >
                                         <img src="/google_logo.svg" alt="Google Logo" className="w-5 h-5" />
                                         Continue with Google
