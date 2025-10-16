@@ -5,14 +5,52 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import Image from "next/image";
 import AdminProductActions from "@/components/AdminProductActions";
+import AdminProductFilters from "@/components/AdminProductFilters";
 
-export default async function AdminProductsPage() {
+export default async function AdminProductsPage({
+    searchParams,
+}: {
+    searchParams: Promise<Record<string, string | undefined>>;
+}) {
     const session = await getServerSession(authOptions);
     if (!session || session.user?.role !== "ADMIN") {
         redirect("/auth/login");
     }
 
-    const products = await prisma.product.findMany({ orderBy: { createdAt: "desc" } });
+    const params = await searchParams;
+    const q = params.q || "";
+    const category = params.category || "";
+    const minPrice = params.minPrice || "";
+    const maxPrice = params.maxPrice || "";
+    const sort = params.sort || "";
+
+    // ✅ Type-safe orderBy
+    let orderBy: Record<string, "asc" | "desc"> = { createdAt: "desc" };
+    if (sort === "price-asc") orderBy = { price: "asc" };
+    if (sort === "price-desc") orderBy = { price: "desc" };
+    if (sort === "oldest") orderBy = { createdAt: "asc" };
+
+    const products = await prisma.product.findMany({
+        where: {
+            AND: [
+                q
+                    ? {
+                        OR: [
+                            { name: { contains: q, mode: "insensitive" } },
+                            { slug: { contains: q, mode: "insensitive" } },
+                        ],
+                    }
+                    : {},
+                category ? { categories: { some: { name: category } } } : {},
+                minPrice ? { price: { gte: parseFloat(minPrice) } } : {},
+                maxPrice ? { price: { lte: parseFloat(maxPrice) } } : {},
+            ],
+        },
+        orderBy,
+        include: { categories: true },
+    });
+
+
     return (
         <main className="min-h-screen p-8 bg-cover bg-center text-white">
             {/* Header */}
@@ -35,6 +73,8 @@ export default async function AdminProductsPage() {
                     </Link>
                 </div>
             </div>
+
+            <AdminProductFilters />
 
             {/* Products Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
