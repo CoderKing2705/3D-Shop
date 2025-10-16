@@ -148,7 +148,7 @@ export default function AuthPage() {
                                 >
                                     {loading ? (
                                         <div className="flex items-center justify-center gap-3">
-                                            <Loader size={1.5} color="white" />
+                                            <Loader size={1.5} />
                                             Signing in...
                                         </div>
                                     ) : (
@@ -226,7 +226,7 @@ export default function AuthPage() {
                                 >
                                     {loading ? (
                                         <div className="flex items-center justify-center gap-2">
-                                            <Loader size={1.5} color="white" />
+                                            <Loader size={1.5} />
                                             Signing up...
                                         </div>
                                     ) : (

@@ -1,10 +1,22 @@
 import { motion } from "framer-motion";
 
-export default function Loader({ size = 6, color = "white" }: { size?: number; color?: string }) {
+interface LoaderProps {
+    size?: number; // in rem
+}
+
+export default function Loader({ size = 1.5 }: LoaderProps) {
     return (
         <motion.div
-            className={`border-2 border-t-${color} border-t-transparent border-${color} rounded-full`}
-            style={{ width: `${size}rem`, height: `${size}rem`, borderWidth: "3px", borderColor: `${color} transparent transparent transparent` }}
+            className="rounded-full border-4 border-t-transparent border-b-transparent border-r-transparent border-l-[5px]"
+            style={{
+                width: `${size}rem`,
+                height: `${size}rem`,
+                borderLeftColor: "transparent",
+                borderTopColor: "transparent",
+                borderBottomColor: "transparent",
+                borderRightColor: "transparent",
+                background: "conic-gradient(from 0deg, #a855f7, #ec4899, #f43f5e, #a855f7)",
+            }}
             animate={{ rotate: 360 }}
             transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
         />
