@@ -4,8 +4,8 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import Image from "next/image";
-import AdminProductActions from "@/components/AdminProductActions";
-import AdminProductFilters from "@/components/AdminProductFilters";
+import AdminProductFilters from "@/components/Admin/AdminProductFilters";
+import AdminProductActions from "@/components/Admin/AdminProductActions";
 
 export default async function AdminProductsPage({
     searchParams,
