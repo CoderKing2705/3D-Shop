@@ -7,6 +7,10 @@ import Image from "next/image";
 import AdminProductFilters from "@/components/Admin/AdminProductFilters";
 import AdminProductActions from "@/components/Admin/AdminProductActions";
 
+
+export const revalidate = 30;
+
+
 export default async function AdminProductsPage({
     searchParams,
 }: {
@@ -23,6 +27,8 @@ export default async function AdminProductsPage({
     const minPrice = params.minPrice || "";
     const maxPrice = params.maxPrice || "";
     const sort = params.sort || "";
+    const page = parseInt(params.page || "1"); // ✅ Page param
+    const pageSize = 6; // ✅ 12 products per page
 
     // ✅ Type-safe orderBy
     let orderBy: Record<string, "asc" | "desc"> = { createdAt: "desc" };
@@ -30,25 +36,51 @@ export default async function AdminProductsPage({
     if (sort === "price-desc") orderBy = { price: "desc" };
     if (sort === "oldest") orderBy = { createdAt: "asc" };
 
-    const products = await prisma.product.findMany({
-        where: {
-            AND: [
-                q
-                    ? {
-                        OR: [
-                            { name: { contains: q, mode: "insensitive" } },
-                            { slug: { contains: q, mode: "insensitive" } },
-                        ],
-                    }
-                    : {},
-                category ? { categories: { some: { name: category } } } : {},
-                minPrice ? { price: { gte: parseFloat(minPrice) } } : {},
-                maxPrice ? { price: { lte: parseFloat(maxPrice) } } : {},
-            ],
-        },
-        orderBy,
-        include: { categories: true },
-    });
+    const [products, totalProducts] = await Promise.all([
+        prisma.product.findMany({
+            where: {
+                AND: [
+                    q
+                        ? {
+                            OR: [
+                                { name: { contains: q, mode: "insensitive" } },
+                                { slug: { contains: q, mode: "insensitive" } },
+                            ],
+                        }
+                        : {},
+                    category ? { categories: { some: { name: category } } } : {},
+                    minPrice ? { price: { gte: parseFloat(minPrice) } } : {},
+                    maxPrice ? { price: { lte: parseFloat(maxPrice) } } : {},
+                ],
+            },
+            orderBy,
+            skip: (page - 1) * pageSize,
+            take: pageSize,
+            include: { categories: true },
+        }),
+
+        // ✅ Count for pagination
+        prisma.product.count({
+            where: {
+                AND: [
+                    q
+                        ? {
+                            OR: [
+                                { name: { contains: q, mode: "insensitive" } },
+                                { slug: { contains: q, mode: "insensitive" } },
+                            ],
+                        }
+                        : {},
+                    category ? { categories: { some: { name: category } } } : {},
+                    minPrice ? { price: { gte: parseFloat(minPrice) } } : {},
+                    maxPrice ? { price: { lte: parseFloat(maxPrice) } } : {},
+                ],
+            },
+        }),
+    ]);
+
+
+    const totalPages = Math.ceil(totalProducts / pageSize);
 
 
     return (
@@ -77,32 +109,65 @@ export default async function AdminProductsPage({
             <AdminProductFilters />
 
             {/* Products Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {products.map((p) => (
-                    <div
-                        key={p.id}
-                        className="bg-white/10 backdrop-blur-md border border-purple-600 rounded-2xl shadow-lg p-6 transform transition-transform hover:scale-105 hover:shadow-2xl"
-                    >
-                        <h2 className="text-2xl font-semibold text-purple-300 mb-2">{p.name}</h2>
-                        <p className="text-gray-300 mb-2">Slug: {p.slug}</p>
-                        <div className="flex items-center justify-between mb-4">
-                            <p className="text-white font-bold text-lg">${p.price}</p>
-                            {p.thumbnail && (
-                                <div className="w-16 h-16 relative rounded-lg overflow-hidden border border-purple-500">
-                                    <Image
-                                        src={p.thumbnail}
-                                        alt={p.name}
-                                        fill
-                                        className="object-cover"
-                                    />
-                                </div>
-                            )}
-                        </div>
+            {products.length === 0 ? (
+                <p className="text-center text-gray-400 mt-10">No products found.</p>
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {products.map((p) => (
+                        <div
+                            key={p.id}
+                            className="bg-white/10 backdrop-blur-md border border-purple-600 rounded-2xl shadow-lg p-6 transform transition-transform hover:scale-105 hover:shadow-2xl"
+                        >
+                            <h2 className="text-2xl font-semibold text-purple-300 mb-2">{p.name}</h2>
+                            <p className="text-gray-300 mb-2">Slug: {p.slug}</p>
+                            <div className="flex items-center justify-between mb-4">
+                                <p className="text-white font-bold text-lg">${p.price}</p>
+                                {p.thumbnail && (
+                                    <div className="w-16 h-16 relative rounded-lg overflow-hidden border border-purple-500">
+                                        <Image
+                                            src={p.thumbnail}
+                                            alt={p.name}
+                                            fill
+                                            className="object-cover"
+                                        />
+                                    </div>
+                                )}
+                            </div>
 
-                        <AdminProductActions id={p.id} />
-                    </div>
-                ))}
-            </div>
+                            <AdminProductActions id={p.id} />
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            {/* ✅ Pagination Controls */}
+            {totalPages > 1 && (
+                <div className="flex justify-center mt-10 gap-3">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((pNum) => {
+                        const newParams = new URLSearchParams();
+
+                        if (q) newParams.set("q", q);
+                        if (category) newParams.set("category", category);
+                        if (minPrice) newParams.set("minPrice", minPrice);
+                        if (maxPrice) newParams.set("maxPrice", maxPrice);
+                        if (sort) newParams.set("sort", sort);
+                        newParams.set("page", pNum.toString());
+
+                        return (
+                            <Link
+                                key={pNum}
+                                href={`/admin/products?${newParams.toString()}`}
+                                className={`px-4 py-2 rounded-lg font-semibold transition-all ${pNum === page
+                                        ? "bg-purple-600 text-white"
+                                        : "bg-gray-800 text-gray-300 hover:bg-gray-700"
+                                    }`}
+                            >
+                                {pNum}
+                            </Link>
+                        );
+                    })}
+                </div>
+            )}
         </main>
     );
 }
